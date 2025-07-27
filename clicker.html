@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clicker Game</title>
+  <link rel="stylesheet" href="clicker_main.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="clicker_main_extended.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <div class="logo"><b>Work in Progress</b></div>
+    <h6><i>Alpha_Build - Version 0.0.2.8</i></h6>
+
+    <div class="ressourcen-container">
+      <div class="ressource"><div class="label">Geld</div><div id="res_money_count">0</div></div>
+      <div class="ressource"><div class="label">Kräuter</div><div id="res_herbs_count">0</div></div>
+      <div class="ressource"><div class="label">Nahrung</div><div id="res_food_count">0</div></div>
+      <div class="ressource"><div class="label">Holz</div><div id="res_wood_count">0</div></div>
+      <div class="ressource"><div class="label">Stein</div><div id="res_stone_count">0</div></div>
+      <div class="ressource"><div class="label">Metall</div><div id="res_metal_count">0</div></div>
+      <div class="ressource"><div class="label">Klicks</div><div id="click_count_total">0</div></div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-btn" data-target="overview">Übersicht</button>
+      <button class="nav-btn" data-target="sammeln">Sammeln</button>
+      <button class="nav-btn" data-target="marktplatz">Marktplatz</button>
+      <button class="nav-btn" data-target="itemshop">Itemshop</button>
+      <button class="nav-btn" data-target="grundstuecke">Baufelder</button>
+      <button class="nav-btn" data-target="buildings">Gebäude</button>
+      <button class="nav-btn" data-target="arbeiter">Arbeiter</button>
+      <button class="nav-btn" data-target="upgrades">Upgrades</button>
+      <button class="nav-btn" data-target="quests">Quests</button>
+    </nav>
+  </header>
+
+  <main id="main_content">
+    <!-- Inhalte werden dynamisch geladen -->
+  </main>
+
+  <script>
+    const sections = ["overview", "sammeln", "marktplatz", "itemshop", "grundstuecke", "buildings", "arbeiter", "upgrades", "quests"];
+    const contentArea = document.getElementById("main_content");
+
+    function loadSection(name) {
+      fetch(`sections/${name}.html`)
+        .then(res => res.text())
+        .then(html => {
+          contentArea.innerHTML = html;
+          setTimeout(() => {
+            if (typeof initSection === "function") initSection();
+          }, 0);
+        })
+        .catch(err => {
+          contentArea.innerHTML = `<p style="color:red;">Fehler beim Laden: ${err.message}</p>`;
+        });
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.target;
+        loadSection(target);
+      });
+    });
+
+    loadSection("overview");
+  </script>
+</body>
+</html>
