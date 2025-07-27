@@ -1,41 +1,45 @@
 
-function spawnClickEffect(x, y, text = "+1", color = "#2ecc71") {
-  const effect = document.createElement("div");
-  effect.textContent = text;
-  effect.style.position = "fixed";
-  effect.style.left = x + "px";
-  effect.style.top = y + "px";
-  effect.style.fontSize = "16px";
-  effect.style.fontWeight = "bold";
-  effect.style.color = color;
-  effect.style.pointerEvents = "none";
-  effect.style.opacity = 1;
-  effect.style.transition = "all 1s ease-out";
-  effect.style.zIndex = 9999;
+function spawnParticle(x, y, emoji = "🍃") {
+  const particle = document.createElement("div");
+  particle.textContent = emoji;
+  particle.style.position = "fixed";
+  particle.style.left = x + "px";
+  particle.style.top = y + "px";
+  particle.style.fontSize = "20px";
+  particle.style.pointerEvents = "none";
+  particle.style.opacity = 1;
+  particle.style.transition = "transform 1s ease-out, opacity 1s ease-out";
+  particle.style.transform = "translateY(0px) scale(1)";
+  particle.style.zIndex = 9999;
 
-  document.body.appendChild(effect);
+  document.body.appendChild(particle);
 
+  // Auslösen der Animation
   setTimeout(() => {
-    effect.style.top = (y - 50) + "px";
-    effect.style.opacity = 0;
-  }, 20);
+    const xShift = (Math.random() - 0.5) * 100;
+    const yShift = -60 - Math.random() * 40;
+    particle.style.transform = `translate(${xShift}px, ${yShift}px) scale(0.5)`;
+    particle.style.opacity = 0;
+  }, 10);
 
+  // Entfernen nach Animation
   setTimeout(() => {
-    effect.remove();
+    particle.remove();
   }, 1000);
 }
 
-// Ereignisse anhängen für Klick-Feedback
+// Klickereignisse mit Partikel
 document.addEventListener("click", function (e) {
   const target = e.target;
+  const { clientX: x, clientY: y } = e;
 
   if (target.id === "gather_herbs") {
-    spawnClickEffect(e.clientX, e.clientY, "+1 Kräuter", "#27ae60");
+    spawnParticle(x, y, "🌿");
   }
   else if (target.id === "gather_food") {
-    spawnClickEffect(e.clientX, e.clientY, "+1 Nahrung", "#e67e22");
+    spawnParticle(x, y, "🍖");
   }
   else if (target.id === "sell_all") {
-    spawnClickEffect(e.clientX, e.clientY, "💰 Verkauft", "#f1c40f");
+    spawnParticle(x, y, "💰");
   }
 });
