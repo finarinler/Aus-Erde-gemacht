@@ -1,282 +1,66 @@
-body{
-    margin-left: 3px;
-    margin-top: 3px;
-    margin-right: 3px;
-    margin-bottom: 3px;
-    height: 100%;
-    width: 99%;
-    background-color: lightgreen;
-}
 
-#main_body {
-    background-color: black;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
 }
-
-#changelog_body {
-    background-color: gray;
-}
-
-.fixed {
-    width: 100%;
-    height: 255px;
-} 
 
 .header {
-    width: 99%;
-    background-color: lightgreen;
-    position: fixed;
+  background-color: #222;
+  color: #fff;
+  padding: 10px 20px;
 }
 
 .logo {
-    position: sticky, fixed;
-    font-size: 30px;
-}
-
-.inventory {
-    margin: 0 auto;
-}
-
-.nav {
-    margin-top: 110px;
-    position: absolute;
-    left: 1.5%; 
-}
-
-.get_ress_buttons {
-    display: grid;
-    margin-top: 100px;
-    margin-left: 18%;
-    grid-template-columns: repeat(5, 250px);
-    column-gap: 25px;
-}
-
-.content {
-    border: 2px solid black;
-    margin-top: 25px;
-    margin-left: 5px;
-    width: 100%;
-    height: 630px;
-    background-color: gray;
-    display: flex;
-    overflow-y: scroll;
-}
-
-.overview {
-    display: block;
-    margin-left: 25px;
-}
-
-.save_and_load {
-    display: grid;
-    position: absolute;
-    left: 85%;
-}
-
-.overviewcont {
-    margin-top: 5%;
-    margin-right: 25%;
-}
-
-.changelog {
-    display: grid;
-    grid-template-columns: repeat(3, 500px);
-    column-gap: 25px;
-}
-
-.changelogcont {
-    margin-left: 10%;
-}
-
-.sammeln, .marktplatz, .itemshop, .grundstuecke, .buildings, .arbeiter, .upgrades, .quests {
-    display: none;
-    margin-left: 25px;
-}
-
-#ressourcen_shown {
-    text-align: center;
-    border: medium solid;
-    background-color: lightblue;
-    position: absolute;
-    left: 23%;
-}
-
-#ressourcen_shown2 {
-    text-align: center;
-    border: medium solid;
-    background-color: lightblue;
-    position: absolute;
-    right: 10%;
-}
-
-#ressourcen_shown_herbs {
-    text-align: center;
-    border: medium solid;
-    background-color: lightblue;
-    position: absolute;
-    left: 15%;
-    display: none;
-}
-
-#ressourcen_shown_food {
-    text-align: center;
-    border: medium solid;
-    background-color: lightblue;
-    position: absolute;
-    left: 29.5%;
-    display: none;
-}
-
-#ressourcen_shown_wood {
-    text-align: center;
-    border: medium solid;
-    background-color: lightblue;
-    position: absolute;
-    left: 44%;
-    display: none;
-}
-
-#ressourcen_shown_stone {
-    text-align: center;
-    border: medium solid;
-    background-color: lightblue;
-    position: absolute;
-    left: 58.5%;
-    display: none;
-}
-
-#ressourcen_shown_metal {
-    text-align: center;
-    border: medium solid;
-    background-color: lightblue;
-    position: absolute;
-    left: 73%;
-    display: none;
-}
-
-#res_count, #res_money_count, #res_civ_count, #res_field_count, #res_herbs_count, #res_food_count, #res_wood_count, #res_stone_count, #res_metal_count, #click_count_total {
-    border: medium solid;
-    background-color: white;
-    text-align: center;
-}
-
-#get_per_s_money, #get_per_s_civ, #get_per_s_field, #get_per_s_herbs, #get_per_s_food, #get_per_s_wood, #get_per_s_stone, #get_per_s_metal {
-    border: medium solid;
-    background-color: white;
-    text-align: center;
-}
-
-#res_auto_hoe, #res_auto_axe, #res_auto_pickaxe, #res_auto_magnet {
-    border: medium solid;
-    background-color: white;
-    text-align: center;
-}
-
-#sitchelcount1, #sitchelcount2, #hoecount1, #hoecount2, #axecount1, #axecount2, #pickaxecount1, #pickaxecount2, #magnetcount1, #magnetcount2 {
-    border: medium solid;
-    background-color: white;
-    text-align: center;
-}
-
-#harvest_herbs_count, #harvest_food_count, #harvest_wood_count, #harvest_stone_count, #harvest_metal_count {
-    border: medium solid;
-    background-color: white;
-    text-align: center;
-}
-
-#fieldcount1, #fieldcount2, #fieldcount3, #fieldcount4 {
-    border: medium solid;
-    background-color: white;
-    text-align: center;
-}
-
-#auto_sitchel, #auto_hoe1, #auto_hoe2, #auto_axe, #auto_pickaxe, #auto_magnet {
-    border: medium solid;
-    background-color: white;
-    text-align: center;
-}
-
-#civtentcount, #civwoodsmallcount, #civwoodlargecount, #civstonesmallcount, #civstonelargecount, #civcitysmallcount, #civcitylargecount {
-    border: medium solid;
-    background-color: white;
-    text-align: center;
-}
-
-#upgrade1 {
-    border: medium solid;
-    background-color: white;
-    text-align: center;
-}
-
-#questcount {
-    border: medium solid;
-    background-color: white;
-    text-align: center;
-}
-
-button{
-    background-color: white;
-    font-size: 25px;
-}
-
-button:hover {
-    background-color: lightblue;
-    font-size: 25px;
-}
-
-button:active {
-    background-color: lightgreen;
-    font-size: 25px;
-}
-
-/*Quest - Tutorial & Done*/
-#questtut {
-    color: green;
-}
-
-.questtut1 {
-    display: block;
-}
-
-.questtut2, .questtut3,  .questtut4,  .questtut5, .questtut6, .questx, .questdone {
-    display: none;
-}
-
-/*Quests*/
-.quest1, .quest2, .quest3, .quest4, .quest5, .quest6 {
-    display: none;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .ressourcen-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    background-color: lightblue;
-    padding: 10px;
-    border: 2px solid black;
-    margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .ressource {
-    background-color: white;
-    border: 2px solid black;
-    border-radius: 5px;
-    padding: 10px;
-    width: 120px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 18px;
-    transition: background-color 0.3s ease;
+  background-color: #444;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.ressource .label {
-    font-size: 14px;
-    color: #444;
-    margin-bottom: 5px;
+.nav {
+  margin-top: 15px;
 }
 
-.ressource.flash {
-    background-color: #a0e0a0;
+.nav-btn {
+  margin: 5px;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  background-color: #555;
+  color: white;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.nav-btn:hover {
+  background-color: #777;
+}
+
+main {
+  padding: 20px;
+}
+
+h2 {
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .button-container {
@@ -291,4 +75,13 @@ button:active {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.button-container button:hover {
+  background-color: #2980b9;
 }
