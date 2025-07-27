@@ -40,33 +40,34 @@
   <main id="main_content">
     <!-- Inhalte werden dynamisch geladen -->
   </main>
+  
+<script>
+  const sections = ["overview", "sammeln", "marktplatz", "itemshop", "grundstuecke", "buildings", "arbeiter", "upgrades", "quests"];
+  const contentArea = document.getElementById("main_content");
 
-  <script>
-    const sections = ["overview", "sammeln", "marktplatz", "itemshop", "grundstuecke", "buildings", "arbeiter", "upgrades", "quests"];
-    const contentArea = document.getElementById("main_content");
-
-    function loadSection(name) {
-      fetch(`sections/${name}.html`)
-        .then(res => res.text())
-        .then(html => {
-          contentArea.innerHTML = html;
-          setTimeout(() => {
-            if (typeof initSection === "function") initSection();
-          }, 0);
-        })
-        .catch(err => {
-          contentArea.innerHTML = `<p style="color:red;">Fehler beim Laden: ${err.message}</p>`;
-        });
-    }
-
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const target = btn.dataset.target;
-        loadSection(target);
+  function loadSection(name) {
+    fetch(`sections/${name}.html`)
+      .then(res => res.text())
+      .then(html => {
+        contentArea.innerHTML = html;
+        setTimeout(() => {
+          if (typeof initSection === "function") initSection();
+        }, 0);
+      })
+      .catch(err => {
+        contentArea.innerHTML = `<p style="color:red;">Fehler beim Laden: ${err.message}</p>`;
       });
-    });
+  }
 
-    loadSection("overview");
-  </script>
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const target = btn.dataset.target;
+      loadSection(target);
+    });
+  });
+
+  // Startansicht laden
+  loadSection("overview");
+</script>
 </body>
 </html>
