@@ -100,3 +100,15 @@ h2 {
 .button-container button {
   transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
+
+body {
+  overflow: visible !important;
+}
+
+.particle {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  font-size: 20px;
+  transition: transform 1s ease-out, opacity 1s ease-out;
+}
