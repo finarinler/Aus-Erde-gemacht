@@ -278,3 +278,17 @@ button:active {
 .ressource.flash {
     background-color: #a0e0a0;
 }
+
+.button-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
