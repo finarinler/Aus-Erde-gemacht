@@ -5,6 +5,12 @@ function spawnParticle(x, y, emoji = "🍃") {
   particle.className = "particle";
   particle.style.left = window.scrollX + x + "px";
   particle.style.top = window.scrollY + y + "px";
+  particle.style.position = "fixed";
+  particle.style.zIndex = 9999;
+  particle.style.pointerEvents = "none";
+  particle.style.fontSize = "20px";
+  particle.style.opacity = 1;
+  particle.style.transition = "transform 1s ease-out, opacity 1s ease-out";
 
   document.body.appendChild(particle);
 

@@ -101,9 +101,6 @@ h2 {
   transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 
-body {
-  overflow: visible !important;
-}
 
 .particle {
   position: fixed;
