@@ -85,3 +85,18 @@ h2 {
 .button-container button:hover {
   background-color: #2980b9;
 }
+
+
+/* Bestehendes bleibt bestehen, wir erweitern um Animation */
+
+.button-container button:active {
+  transform: scale(0.95);
+  background-color: #1f78b4;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) inset;
+  transition: transform 0.05s ease-in-out;
+}
+
+/* Optional: sanfter Aufpoppen beim Hovern */
+.button-container button {
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
