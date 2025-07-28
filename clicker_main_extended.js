@@ -18,6 +18,13 @@ function updateDisplay() {
 }
 
 function initSection() {
+const foodBtn = document.getElementById("gather_food");
+  if (foodBtn) {
+    foodBtn.addEventListener("click", () => {
+      res_food += 1;
+      updateDisplay();
+    });
+  }
   const woodBtn = document.getElementById("gather_wood");
   if (woodBtn) {
     woodBtn.addEventListener("click", () => {
