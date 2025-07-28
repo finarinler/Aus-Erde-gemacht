@@ -1,103 +1,89 @@
 
 // === Ressourcen ===
 let res_money = 0;
-let res_herbs = 1000;
-let res_food = 800;
-let res_wood = 600;
-let res_stone = 500;
-let res_coal = 300;
-let res_ore = 100;
+let res_herbs = 0;
+let res_food = 0;
+let res_wood = 0;
+let res_stone = 0;
+let res_coal = 0;
+let res_ore = 0;
 
 function updateDisplay() {
-  const money = document.getElementById("res_money_count");
-  if (money) money.textContent = res_money.toFixed(1);
+  document.getElementById("res_money_count").textContent = res_money;
+  document.getElementById("res_herbs_count").textContent = res_herbs;
+  document.getElementById("res_food_count").textContent = res_food;
+  document.getElementById("res_wood_count").textContent = res_wood;
+  document.getElementById("res_stone_count").textContent = res_stone;
+  document.getElementById("res_coal_count").textContent = res_coal;
+  document.getElementById("res_metal_count").textContent = res_ore;
 }
-updateDisplay();
-
-// === Marktplatz ===
-const basePrices = {
-  herbs: 0.5,
-  food: 1.0,
-  wood: 1.5,
-  stone: 2.0,
-  coal: 3.0,
-  ore: 4.0
-};
-
-function getDiscount(qty) {
-  if (qty >= 7501) return 0.25;
-  if (qty >= 2001) return 0.5;
-  if (qty >= 1001) return 0.6;
-  if (qty >= 501)  return 0.7;
-  if (qty >= 251)  return 0.8;
-  if (qty >= 101)  return 0.9;
-  return 1.0;
-}
-
 document.addEventListener("DOMContentLoaded", () => {
-  const sellButton = document.getElementById("sell_button");
-  const inputs = ["herbs", "food", "wood", "stone", "coal", "ore"].map(res => document.getElementById(`sell_${res}`));
-  const preview = document.getElementById("market_preview");
-  const output = document.getElementById("market_output");
+  updateDisplay();
 
-  function calculatePreview() {
-    let totalCoins = 0;
-    const breakdown = [];
-
-    for (const res of ["herbs", "food", "wood", "stone", "coal", "ore"]) {
-      const qty = parseInt(document.getElementById(`sell_${res}`).value || "0");
-      if (qty > 0) {
-        const discount = getDiscount(qty);
-        const earned = qty * basePrices[res] * discount;
-        breakdown.push(`${qty} × ${res} → ${earned.toFixed(1)} 💰`);
-        totalCoins += earned;
-      }
+  const gather = (id, action) => {
+    const btn = document.getElementById(id);
+    if (btn) {
+      btn.addEventListener("click", action);
     }
+  };
 
-    if (preview) {
-      preview.innerText = breakdown.length ? `Vorschau: ${breakdown.join(", ")}
-Gesamt: ${totalCoins.toFixed(1)} Münzen` : "";
-    }
-  }
+  gather("gather_herbs", () => {
+    res_herbs++;
+    updateDisplay();
+  });
 
-  inputs.forEach(input => input?.addEventListener("input", calculatePreview));
+  gather("gather_food", () => {
+    res_food++;
+    updateDisplay();
+  });
 
-  if (sellButton) {
-    sellButton.addEventListener("click", () => {
-      let totalCoins = 0;
-      let result = [];
+  gather("gather_wood", () => {
+    res_wood++;
+    updateDisplay();
+  });
 
-      const sales = [
-        ["herbs", res_herbs, "🌿"],
-        ["food", res_food, "🍎"],
-        ["wood", res_wood, "🪵"],
-        ["stone", res_stone, "🧱"],
-        ["coal", res_coal, "⚫"],
-        ["ore", res_ore, "🪨"]
-      ];
+  gather("gather_stone", () => {
+    res_stone++;
+    // Chance auf Kohle und Erz
+    let roll = Math.random();
+    if (roll <= 0.015) { res_coal++; res_ore ++; }
+    else if (roll <= 0.035) { res_ore ++; }
+    else if (roll <= 0.10) { res_coal++; }
+    updateDisplay();
+  });
 
-      for (const [res, _, emoji] of sales) {
-        const input = document.getElementById(`sell_${res}`);
-        const qty = parseInt(input?.value || "0");
+  // Speicherfunktion (nur auf Overview)
+  const save = document.getElementById("save_game");
+  const load = document.getElementById("load_game");
+  const del = document.getElementById("delete_game");
 
-        if (qty > 0) {
-          if (qty > window[`res_${res}`]) {
-            result.push(`${emoji} Nicht genug ${res}`);
-            continue;
-          }
+  if (save) save.addEventListener("click", () => {
+    localStorage.setItem("clickerSave", JSON.stringify({
+      money: res_money,
+      herbs: res_herbs,
+      food: res_food,
+      wood: res_wood,
+      stone: res_stone,
+      coal: res_coal,
+      ore: res_ore
+    }));
+  });
 
-          const discount = getDiscount(qty);
-          const earned = qty * basePrices[res] * discount;
-          totalCoins += earned;
-          window[`res_${res}`] -= qty;
-          result.push(`${emoji} ${qty} verkauft für ${earned.toFixed(1)} Münzen`);
-        }
-      }
+  if (load) load.addEventListener("click", () => {
+    const data = JSON.parse(localStorage.getItem("clickerSave") || "{}");
+    res_money = data.money || 0;
+    res_herbs = data.herbs || 0;
+    res_food = data.food || 0;
+    res_wood = data.wood || 0;
+    res_stone = data.stone || 0;
+    res_coal = data.coal || 0;
+    res_ore = data.ore || 0;
+    updateDisplay();
+  });
 
-      res_money += totalCoins;
-      updateDisplay();
-      if (output) output.innerText = result.join("\n") + `\n💰 Gesamt: ${totalCoins.toFixed(1)} Münzen`;
-      if (preview) preview.innerText = "";
-    });
-  }
+  if (del) del.addEventListener("click", () => {
+    localStorage.removeItem("clickerSave");
+    res_money = res_herbs = res_food = res_wood = res_stone = res_coal = res_ore = 0;
+    updateDisplay();
+  });
 });
