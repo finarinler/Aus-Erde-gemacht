@@ -55,7 +55,7 @@ const foodBtn = document.getElementById("gather_food");
       if (roll <= 0.05) {
         res_coal += 1;
         res_ore += 2;
-      } else if (roll <= 0.15) {
+      } else if (roll <= 0.10) {
         res_ore += 2;
       } else if (roll <= 0.30) {
         res_coal += 1;
@@ -100,10 +100,6 @@ function saveGame() {
     res_coal,
     res_ore
   };
-  localStorage.setItem("clickerSave", JSON.stringify(saveData));
-  alert("Spielstand gespeichert!");
-}
-;
   localStorage.setItem("clickerSave", JSON.stringify(saveData));
   alert("Spielstand gespeichert!");
 }
