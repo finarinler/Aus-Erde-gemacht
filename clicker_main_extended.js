@@ -18,12 +18,65 @@ function updateDisplay() {
 }
 
 function initSection() {
-const saveBtn = document.getElementById("save_game");
+  const herbsBtn = document.getElementById("gather_herbs");
+  if (herbsBtn) {
+    herbsBtn.addEventListener("click", () => {
+      res_herbs += 1;
+      updateDisplay();
+    });
+  }
+
+  const foodBtn = document.getElementById("gather_food");
+  if (foodBtn) {
+    foodBtn.addEventListener("click", () => {
+      res_food += 1;
+      updateDisplay();
+    });
+  }
+
+  const woodBtn = document.getElementById("gather_wood");
+  if (woodBtn) {
+    woodBtn.addEventListener("click", () => {
+      res_wood += 1;
+      updateDisplay();
+    });
+  }
+
+  const stoneBtn = document.getElementById("gather_stone");
+  if (stoneBtn) {
+    stoneBtn.addEventListener("click", () => {
+      res_stone += 1;
+      const roll = Math.random();
+      if (roll <= 0.05) {
+        res_coal += 1;
+        res_ore += 2;
+      } else if (roll <= 0.10) {
+        res_ore += 2;
+      } else if (roll <= 0.35) {
+        res_coal += 1;
+      }
+      updateDisplay();
+    });
+  }
+
+  const saveBtn = document.getElementById("save_game");
   if (saveBtn) {
     saveBtn.addEventListener("click", saveGame);
   }
 
   const loadBtn = document.getElementById("load_game");
+  if (loadBtn) {
+    loadBtn.addEventListener("click", loadGame);
+  }
+
+  const deleteBtn = document.getElementById("delete_game");
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", deleteSave);
+  }
+
+  updateDisplay();
+}
+const loadBtn = document.getElementById("load_game");
   if (loadBtn) {
     loadBtn.addEventListener("click", loadGame);
   }
