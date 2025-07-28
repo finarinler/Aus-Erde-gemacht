@@ -99,3 +99,42 @@ document.getElementById("gather_wood")?.addEventListener("click", () => {
     display.textContent = current + 1;
   }
 });
+
+
+
+document.getElementById("gather_stone")?.addEventListener("click", () => {
+  const stoneDisplay = document.getElementById("res_stone_count");
+  const coalDisplay = document.getElementById("res_coal_count");
+  const metalDisplay = document.getElementById("res_metal_count");
+
+  if (stoneDisplay) {
+    let current = parseInt(stoneDisplay.textContent || "0", 10);
+    stoneDisplay.textContent = current + 1;
+  }
+
+  // Wahrscheinlichkeitseffekte:
+  const roll = Math.random();
+  if (roll <= 0.05) {
+    // 5% -> 1 Kohle & 2 Eisen
+    if (coalDisplay) {
+      let coal = parseInt(coalDisplay.textContent || "0", 10);
+      coalDisplay.textContent = coal + 1;
+    }
+    if (metalDisplay) {
+      let metal = parseInt(metalDisplay.textContent || "0", 10);
+      metalDisplay.textContent = metal + 2;
+    }
+  } else if (roll <= 0.15) {
+    // 10% -> 2 Eisen
+    if (metalDisplay) {
+      let metal = parseInt(metalDisplay.textContent || "0", 10);
+      metalDisplay.textContent = metal + 2;
+    }
+  } else if (roll <= 0.30) {
+    // 15% -> 1 Kohle
+    if (coalDisplay) {
+      let coal = parseInt(coalDisplay.textContent || "0", 10);
+      coalDisplay.textContent = coal + 1;
+    }
+  }
+});
