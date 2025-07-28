@@ -17,6 +17,7 @@ function updateDisplay() {
   document.getElementById("res_ore_count").innerText = res_ore;
 }
 
+
 function saveGame() {
   const saveData = {
     res_money,
@@ -27,23 +28,42 @@ function saveGame() {
     res_coal,
     res_ore
   };
+  try {
+    localStorage.setItem("clickerSave", JSON.stringify(saveData));
+    alert("💾 Spielstand gespeichert!");
+  } catch (e) {
+    console.error("Fehler beim Speichern:", e);
+    alert("❌ Speichern fehlgeschlagen.");
+  }
+}
+;
   localStorage.setItem("clickerSave", JSON.stringify(saveData));
   alert("Spielstand gespeichert!");
 }
 
+
 function loadGame() {
-  const saveData = JSON.parse(localStorage.getItem("clickerSave"));
-  if (saveData) {
-    res_money = saveData.res_money || 0;
-    res_herbs = saveData.res_herbs || 0;
-    res_food = saveData.res_food || 0;
-    res_wood = saveData.res_wood || 0;
-    res_stone = saveData.res_stone || 0;
-    res_coal = saveData.res_coal || 0;
-    res_ore = saveData.res_ore || 0;
-    updateDisplay();
-    alert("Spielstand geladen!");
-  } else {
+  try {
+    const saveData = JSON.parse(localStorage.getItem("clickerSave"));
+    if (saveData && typeof saveData === "object") {
+      res_money = saveData.res_money ?? 0;
+      res_herbs = saveData.res_herbs ?? 0;
+      res_food = saveData.res_food ?? 0;
+      res_wood = saveData.res_wood ?? 0;
+      res_stone = saveData.res_stone ?? 0;
+      res_coal = saveData.res_coal ?? 0;
+      res_ore = saveData.res_ore ?? 0;
+      updateDisplay();
+      alert("📂 Spielstand geladen!");
+    } else {
+      alert("⚠️ Kein gültiger Spielstand gefunden.");
+    }
+  } catch (e) {
+    console.error("Fehler beim Laden:", e);
+    alert("❌ Laden fehlgeschlagen.");
+  }
+}
+else {
     alert("Kein Spielstand gefunden.");
   }
 }
