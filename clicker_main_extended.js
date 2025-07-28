@@ -1,4 +1,6 @@
 
+console.log("Script loaded: clicker_main_extended.js");
+
 // Ressourcen initialisieren
 let res_money = 0;
 let res_herbs = 0;
@@ -8,8 +10,8 @@ let res_stone = 0;
 let res_coal = 0;
 let res_ore = 0;
 
-// Anzeige aktualisieren
 function updateDisplay() {
+  console.log("Updating display...");
   if (document.getElementById("res_money_count")) document.getElementById("res_money_count").textContent = res_money;
   if (document.getElementById("res_herbs_count")) document.getElementById("res_herbs_count").textContent = res_herbs;
   if (document.getElementById("res_food_count")) document.getElementById("res_food_count").textContent = res_food;
@@ -19,27 +21,22 @@ function updateDisplay() {
   if (document.getElementById("res_ore_count")) document.getElementById("res_ore_count").textContent = res_ore;
 }
 
-// Ressourcen sammeln
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM fully loaded and parsed");
+
   const safe = (id, fn) => {
     const el = document.getElementById(id);
-    if (el) el.addEventListener("click", fn);
+    if (el) {
+      console.log("Binding event to:", id);
+      el.addEventListener("click", fn);
+    } else {
+      console.warn("Button not found:", id);
+    }
   };
 
-  safe("gather_herbs", () => {
-    res_herbs++;
-    updateDisplay();
-  });
-
-  safe("gather_food", () => {
-    res_food++;
-    updateDisplay();
-  });
-
-  safe("gather_wood", () => {
-    res_wood++;
-    updateDisplay();
-  });
+  safe("gather_herbs", () => { res_herbs++; updateDisplay(); });
+  safe("gather_food", () => { res_food++; updateDisplay(); });
+  safe("gather_wood", () => { res_wood++; updateDisplay(); });
 
   safe("gather_stone", () => {
     res_stone++;
@@ -55,17 +52,12 @@ document.addEventListener("DOMContentLoaded", () => {
     updateDisplay();
   });
 
-  // Speicherfunktion
   safe("save_game", () => {
-    const data = {
-      res_money, res_herbs, res_food, res_wood,
-      res_stone, res_coal, res_ore
-    };
+    const data = { res_money, res_herbs, res_food, res_wood, res_stone, res_coal, res_ore };
     localStorage.setItem("clickerSave", JSON.stringify(data));
     alert("Spiel gespeichert!");
   });
 
-  // Ladefunktion
   safe("load_game", () => {
     const data = JSON.parse(localStorage.getItem("clickerSave"));
     if (data) {
@@ -77,11 +69,10 @@ document.addEventListener("DOMContentLoaded", () => {
       res_coal = data.res_coal || 0;
       res_ore = data.res_ore || 0;
       updateDisplay();
-      alert("Spielstand geladen!");
+      alert("Spiel geladen!");
     }
   });
 
-  // Löschen
   safe("delete_game", () => {
     localStorage.removeItem("clickerSave");
     res_money = res_herbs = res_food = res_wood = res_stone = res_coal = res_ore = 0;
