@@ -257,3 +257,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+
+function initMarketplaceEvents() {
+  const sellBtn = document.getElementById("sell_button");
+  if (sellBtn) {
+    sellBtn.addEventListener("click", handleSell);
+  }
+
+  const resList = ["herbs", "food", "wood", "stone", "coal", "ore"];
+  resList.forEach(res => {
+    const input = document.getElementById("sell_" + res);
+    if (input) {
+      input.addEventListener("input", previewSellValue);
+    }
+  });
+}
