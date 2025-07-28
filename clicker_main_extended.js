@@ -16,7 +16,6 @@ function updateDisplay() {
   document.getElementById("res_wood_count").textContent = res_wood;
   document.getElementById("res_stone_count").textContent = res_stone;
   document.getElementById("res_metal_count").textContent = res_metal;
-  document.getElementById("click_count_total").textContent = click_total;
 }
 
 // Speicherfunktionen
