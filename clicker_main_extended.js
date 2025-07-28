@@ -1,3 +1,5 @@
+let res_coal = 0;
+let res_ore = 0;
 // Globale Ressourcenvariablen
 let res_money = 0;
 let res_herbs = 0;
@@ -121,6 +123,13 @@ document.getElementById("gather_stone")?.addEventListener("click", () => {
 });
 
 function initSection() {
+const herbsBtn = document.getElementById("gather_herbs");
+  if (herbsBtn) {
+    herbsBtn.addEventListener("click", () => {
+      res_herbs += 1;
+      updateDisplay();
+    });
+  }
   const woodBtn = document.getElementById("gather_wood");
   if (woodBtn) {
     woodBtn.addEventListener("click", () => {
