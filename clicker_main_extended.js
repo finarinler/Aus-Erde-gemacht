@@ -123,6 +123,20 @@ document.getElementById("gather_stone")?.addEventListener("click", () => {
 });
 
 function initSection() {
+const saveBtn = document.getElementById("save_game");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", saveGame);
+  }
+
+  const loadBtn = document.getElementById("load_game");
+  if (loadBtn) {
+    loadBtn.addEventListener("click", loadGame);
+  }
+
+  const deleteBtn = document.getElementById("delete_game");
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", deleteSave);
+  }
 const herbsBtn = document.getElementById("gather_herbs");
   if (herbsBtn) {
     herbsBtn.addEventListener("click", () => {
