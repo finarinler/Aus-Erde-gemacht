@@ -1,149 +1,23 @@
-let res_coal = 0;
-let res_ore = 0;
-// Globale Ressourcenvariablen
+
 let res_money = 0;
 let res_herbs = 0;
 let res_food = 0;
 let res_wood = 0;
 let res_stone = 0;
-let res_metal = 0;
+let res_coal = 0;
+let res_ore = 0;
 
-// Aktualisiert die Anzeige im Header
 function updateDisplay() {
   document.getElementById("res_money_count").textContent = res_money;
   document.getElementById("res_herbs_count").textContent = res_herbs;
   document.getElementById("res_food_count").textContent = res_food;
-      document.getElementById("res_ore_count").textContent = res_metal;
+  document.getElementById("res_wood_count").textContent = res_wood;
+  document.getElementById("res_stone_count").textContent = res_stone;
+  document.getElementById("res_coal_count").textContent = res_coal;
+  document.getElementById("res_ore_count").textContent = res_ore;
 }
-
-// Speicherfunktionen
-function saveGame() {
-  const state = {
-    res_money, res_herbs, res_food, res_wood,
-    res_stone, res_metal
-  };
-  localStorage.setItem("clickerSave", JSON.stringify(state));
-  alert("Spielstand gespeichert!");
-}
-
-function loadGame() {
-  const state = JSON.parse(localStorage.getItem("clickerSave"));
-  if (state) {
-    res_money = state.res_money;
-    res_herbs = state.res_herbs;
-    res_food = state.res_food;
-    res_wood = state.res_wood;
-    res_stone = state.res_stone;
-    res_metal = state.res_metal;
-    updateDisplay();
-    alert("Spielstand geladen!");
-  }
-}
-
-function deleteSave() {
-  localStorage.removeItem("clickerSave");
-  alert("Spielstand gelöscht!");
-}
-
-// Wird nach jedem fetch() aufgerufen
-);
-
-  $("#gather_food").off().on("click", () => {
-    res_food += 1;
-    updateDisplay();
-  });
-
-  // Verkauf
-  $("#sell_all").off().on("click", () => {
-    const total =
-      res_herbs * 0.5 +
-      res_food * 1 +
-      res_wood * 1.5 +
-      res_stone * 2 +
-      res_metal * 3;
-    res_money += total;
-    res_herbs = res_food = res_wood = res_stone = res_metal = 0;
-    updateDisplay();
-  });
-}
-
-// Spielstand beim Laden wiederherstellen
-window.addEventListener("DOMContentLoaded", () => {
-  loadGame();
-  updateDisplay();
-});
-
-
-
-document.getElementById("gather_wood")?.addEventListener("click", () => {
-  const display = document.getElementById("res_wood_count");
-  if (display) {
-    let current = parseInt(display.textContent || "0", 10);
-    display.textContent = current + 1;
-  }
-});
-
-
-
-document.getElementById("gather_stone")?.addEventListener("click", () => {
-  const stoneDisplay = document.getElementById("res_stone_count");
-  const coalDisplay = document.getElementById("res_coal_count");
-  const metalDisplay = document.getElementById("res_ore_count");
-
-  if (stoneDisplay) {
-    let current = parseInt(stoneDisplay.textContent || "0", 10);
-    stoneDisplay.textContent = current + 1;
-  }
-
-  // Wahrscheinlichkeitseffekte:
-  const roll = Math.random();
-  if (roll <= 0.05) {
-    // 5% -> 1 Kohle & 2 Erz
-    if (coalDisplay) {
-      let coal = parseInt(coalDisplay.textContent || "0", 10);
-      coalDisplay.textContent = coal + 1;
-    }
-    if (metalDisplay) {
-      let metal = parseInt(metalDisplay.textContent || "0", 10);
-      metalDisplay.textContent = metal + 2;
-    }
-  } else if (roll <= 0.15) {
-    // 10% -> 2 Erz
-    if (metalDisplay) {
-      let metal = parseInt(metalDisplay.textContent || "0", 10);
-      metalDisplay.textContent = metal + 2;
-    }
-  } else if (roll <= 0.30) {
-    // 15% -> 1 Kohle
-    if (coalDisplay) {
-      let coal = parseInt(coalDisplay.textContent || "0", 10);
-      coalDisplay.textContent = coal + 1;
-    }
-  }
-});
 
 function initSection() {
-const saveBtn = document.getElementById("save_game");
-  if (saveBtn) {
-    saveBtn.addEventListener("click", saveGame);
-  }
-
-  const loadBtn = document.getElementById("load_game");
-  if (loadBtn) {
-    loadBtn.addEventListener("click", loadGame);
-  }
-
-  const deleteBtn = document.getElementById("delete_game");
-  if (deleteBtn) {
-    deleteBtn.addEventListener("click", deleteSave);
-  }
-const herbsBtn = document.getElementById("gather_herbs");
-  if (herbsBtn) {
-    herbsBtn.addEventListener("click", () => {
-      res_herbs += 1;
-      updateDisplay();
-    });
-  }
   const woodBtn = document.getElementById("gather_wood");
   if (woodBtn) {
     woodBtn.addEventListener("click", () => {
@@ -168,30 +42,73 @@ const herbsBtn = document.getElementById("gather_herbs");
       updateDisplay();
     });
   }
-}});
-  }
 
-  const stoneBtn = document.getElementById("gather_stone");
-  if (stoneBtn) {
-    stoneBtn.addEventListener("click", () => {
-      const stoneDisplay = document.getElementById("res_stone_count");
-      const coalDisplay = document.getElementById("res_coal_count");
-      const oreDisplay = document.getElementById("res_ore_count");
-
-      if (stoneDisplay) {
-        let current = parseInt(stoneDisplay.textContent || "0", 10);
-        stoneDisplay.textContent = current + 1;
-      }
-
-      const roll = Math.random();
-      if (roll <= 0.05) {
-        if (coalDisplay) coalDisplay.textContent = parseInt(coalDisplay.textContent || "0", 10) + 1;
-        if (oreDisplay) oreDisplay.textContent = parseInt(oreDisplay.textContent || "0", 10) + 2;
-      } else if (roll <= 0.15) {
-        if (oreDisplay) oreDisplay.textContent = parseInt(oreDisplay.textContent || "0", 10) + 2;
-      } else if (roll <= 0.30) {
-        if (coalDisplay) coalDisplay.textContent = parseInt(coalDisplay.textContent || "0", 10) + 1;
-      }
+  const herbsBtn = document.getElementById("gather_herbs");
+  if (herbsBtn) {
+    herbsBtn.addEventListener("click", () => {
+      res_herbs += 1;
+      updateDisplay();
     });
   }
+
+  const saveBtn = document.getElementById("save_game");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", saveGame);
+  }
+
+  const loadBtn = document.getElementById("load_game");
+  if (loadBtn) {
+    loadBtn.addEventListener("click", loadGame);
+  }
+
+  const deleteBtn = document.getElementById("delete_game");
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", deleteSave);
+  }
+
+  updateDisplay();
+}
+
+function saveGame() {
+  const saveData = {
+    res_money,
+    res_herbs,
+    res_food,
+    res_wood,
+    res_stone,
+    res_coal,
+    res_ore
+  };
+  localStorage.setItem("clickerSave", JSON.stringify(saveData));
+  alert("Spielstand gespeichert!");
+}
+
+function loadGame() {
+  const saveData = JSON.parse(localStorage.getItem("clickerSave"));
+  if (saveData) {
+    res_money = saveData.res_money || 0;
+    res_herbs = saveData.res_herbs || 0;
+    res_food = saveData.res_food || 0;
+    res_wood = saveData.res_wood || 0;
+    res_stone = saveData.res_stone || 0;
+    res_coal = saveData.res_coal || 0;
+    res_ore = saveData.res_ore || 0;
+    updateDisplay();
+    alert("Spielstand geladen!");
+  } else {
+    alert("Kein Spielstand gefunden.");
+  }
+}
+
+function deleteSave() {
+  localStorage.removeItem("clickerSave");
+  res_money = 0;
+  res_herbs = 0;
+  res_food = 0;
+  res_wood = 0;
+  res_stone = 0;
+  res_coal = 0;
+  res_ore = 0;
+  updateDisplay();
+  alert("Spielstand gelöscht.");
 }
