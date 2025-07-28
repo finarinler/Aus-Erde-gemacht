@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aus Erde gemacht</title>
+  <link rel="stylesheet" href="clicker_main.css" />
+  <script src="clicker_main_extended.js" defer></script>
+  <script src="clicker_particles.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <div class="logo"><b>Aus Erde gemacht</b></div>
+    <h6><i>Alpha_Build - Version 0.0.0.78</i></h6>
+
+    <div class="ressourcen-container">
+      <div class="ressource"><div class="label">🪙 Münzen</div><div id="res_money_count">0</div></div>
+      <div class="ressource"><div class="label">🌿 Kräuter</div><div id="res_herbs_count">0</div></div>
+      <div class="ressource"><div class="label">🍖 Nahrung</div><div id="res_food_count">0</div></div>
+      <div class="ressource"><div class="label">🪵 Holz</div><div id="res_wood_count">0</div></div>
+      <div class="ressource"><div class="label">🧱 Stein</div><div id="res_stone_count">0</div></div>
+      <div class="ressource"><div class="label">⚫ Kohle</div><div id="res_coal_count">0</div></div>
+      <div class="ressource"><div class="label">🪨 Erz</div><div id="res_ore_count">0</div></div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-btn" data-target="overview">&Uuml;bersicht</button>
+      <button class="nav-btn" data-target="sammeln">Sammeln</button>
+      <button class="nav-btn" data-target="marktplatz">Marktplatz</button>
+      <button class="nav-btn" data-target="itemshop">Itemshop</button>
+      <button class="nav-btn" data-target="grundstuecke">Baufelder</button>
+      <button class="nav-btn" data-target="buildings">Geb&auml;ude</button>
+      <button class="nav-btn" data-target="arbeiter">Arbeiter</button>
+      <button class="nav-btn" data-target="upgrades">Upgrades</button>
+      <button class="nav-btn" data-target="quests">Quests</button>
+    </nav>
+  </header>
+
+  <main id="main_content"></main>
+
+  <script>
+    function loadSection(name) {
+      fetch(`sections/${name}.html`)
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("main_content").innerHTML = html;
+          if (typeof initSection === 'function') initSection();
+        });
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.target;
+        loadSection(target);
+      });
+    });
+
+    loadSection("overview");
+  </script>
+</body>
+</html>
