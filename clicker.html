@@ -11,7 +11,7 @@
 <body>
   <header class="header">
     <div class="logo"><b>Aus Erde gemacht</b></div>
-    <h6><i>Alpha_Build - Version 0.0.0.78</i></h6>
+    <h6><i>Alpha_Build - Version 0.0.0.79</i></h6>
 
     <div class="ressourcen-container">
       <div class="ressource"><div class="label">🪙 Münzen</div><div id="res_money_count">0</div></div>
@@ -38,24 +38,80 @@
 
   <main id="main_content"></main>
 
-  <script>
-    function loadSection(name) {
-      fetch(`sections/${name}.html`)
-        .then(res => res.text())
-        .then(html => {
-          document.getElementById("main_content").innerHTML = html;
-          if (typeof initSection === 'function') initSection();
-        });
+  
+<script>
+  function initButtonEvents() {
+    function bindClick(id, handler) {
+      const el = document.getElementById(id);
+      if (el) {
+        console.log("Event gebunden an:", id);
+        el.addEventListener("click", handler);
+      } else {
+        console.warn("Nicht gefunden:", id);
+      }
     }
 
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const target = btn.dataset.target;
-        loadSection(target);
-      });
+    bindClick("gather_herbs", () => { res_herbs++; updateDisplay(); });
+    bindClick("gather_food", () => { res_food++; updateDisplay(); });
+    bindClick("gather_wood", () => { res_wood++; updateDisplay(); });
+
+    bindClick("gather_stone", () => {
+      res_stone++;
+      const r = Math.random();
+      if (r < 0.05) { res_ore += 2; res_coal += 1; }
+      else if (r < 0.10) { res_ore += 2; }
+      else if (r < 0.25) { res_coal += 1; }
+      updateDisplay();
     });
 
-    loadSection("overview");
-  </script>
+    bindClick("save_game", () => {
+      const data = { res_money, res_herbs, res_food, res_wood, res_stone, res_coal, res_ore };
+      localStorage.setItem("clickerSave", JSON.stringify(data));
+      alert("Gespeichert");
+    });
+
+    bindClick("load_game", () => {
+      const data = JSON.parse(localStorage.getItem("clickerSave"));
+      if (data) {
+        res_money = data.res_money || 0;
+        res_herbs = data.res_herbs || 0;
+        res_food = data.res_food || 0;
+        res_wood = data.res_wood || 0;
+        res_stone = data.res_stone || 0;
+        res_coal = data.res_coal || 0;
+        res_ore = data.res_ore || 0;
+        updateDisplay();
+      }
+    });
+
+    bindClick("delete_game", () => {
+      localStorage.removeItem("clickerSave");
+      res_money = res_herbs = res_food = res_wood = res_stone = res_coal = res_ore = 0;
+      updateDisplay();
+    });
+  }
+
+  const sections = ["overview", "sammeln", "marktplatz", "itemshop", "grundstuecke", "buildings", "arbeiter", "upgrades", "quests"];
+  const contentArea = document.getElementById("main_content");
+
+  function loadSection(name) {
+    fetch(`sections/${name}.html`)
+      .then(res => res.text())
+      .then(html => {
+        contentArea.innerHTML = html;
+        if (name === "sammeln") initButtonEvents();
+      });
+  }
+
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const target = btn.dataset.target;
+      loadSection(target);
+    });
+  });
+
+  loadSection("overview");
+</script>
+
 </body>
 </html>
