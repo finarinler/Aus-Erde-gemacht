@@ -126,7 +126,7 @@ function loadGame() {
 
 }
 
-else {
+// entferntes leeres else
 
     alert("Kein Spielstand gefunden.");
 
@@ -210,15 +210,6 @@ function initSection() {
 
   // Verkaufsfunktion
 
-  const sell = (amount, price) => {
-
-    if (amount > 0) {
-
-      res_money += amount * price;
-
-      return 0;
-
-    }
 
     return amount;
 
@@ -314,7 +305,6 @@ function initSection() {
 
   $("delete_game")?.addEventListener("click", deleteSave);
 
-});
 
   document.getElementById("gather_food")?.addEventListener("click", () => {
 
@@ -420,7 +410,6 @@ function initSection() {
 
   document.getElementById("delete_game")?.addEventListener("click", deleteSave);
 
-});
 
 
 
@@ -523,7 +512,8 @@ function initSection() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+// [Fix] Fehlender EventListener hinzugefügt
+document.getElementById("UNKNOWN")?.addEventListener("click", () => {
 
   initSection();
 
-});
