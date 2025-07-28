@@ -40,4 +40,7 @@ document.addEventListener("click", function (e) {
   else if (target.id === "sell_all") {
     spawnParticle(x, y, "💰");
   }
+  else if (target.id === "gather_wood") {
+  spawnParticle(x, y, "🪵");
+}
 });
