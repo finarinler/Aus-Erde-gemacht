@@ -16,23 +16,6 @@ let res_ore = 0;
 
 
 
-function updateDisplay() {
-
-  document.getElementById("res_money_count").innerText = res_money;
-
-  document.getElementById("res_herbs_count").innerText = res_herbs;
-
-  document.getElementById("res_food_count").innerText = res_food;
-
-  document.getElementById("res_wood_count").innerText = res_wood;
-
-  document.getElementById("res_stone_count").innerText = res_stone;
-
-  document.getElementById("res_coal_count").innerText = res_coal;
-
-  document.getElementById("res_ore_count").innerText = res_ore;
-
-}
 
 
 
@@ -516,4 +499,16 @@ document.addEventListener("DOMContentLoaded", () => {
 document.getElementById("UNKNOWN")?.addEventListener("click", () => {
 
   initSection();
+
+
+
+function updateDisplay() {
+  if (document.getElementById("res_money_count")) document.getElementById("res_money_count").textContent = res_money;
+  if (document.getElementById("res_herbs_count")) document.getElementById("res_herbs_count").textContent = res_herbs;
+  if (document.getElementById("res_food_count")) document.getElementById("res_food_count").textContent = res_food;
+  if (document.getElementById("res_wood_count")) document.getElementById("res_wood_count").textContent = res_wood;
+  if (document.getElementById("res_stone_count")) document.getElementById("res_stone_count").textContent = res_stone;
+  if (document.getElementById("res_coal_count")) document.getElementById("res_coal_count").textContent = res_coal;
+  if (document.getElementById("res_ore_count")) document.getElementById("res_ore_count").textContent = res_ore;
+}
 
