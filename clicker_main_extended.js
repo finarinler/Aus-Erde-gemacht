@@ -120,6 +120,10 @@ function loadGame() {
     alert("Kein Spielstand gefunden.");
   }
 }
+else {
+    alert("Kein Spielstand gefunden.");
+  }
+}
 
 function deleteSave() {
   localStorage.removeItem("clickerSave");
