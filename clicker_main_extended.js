@@ -1,4 +1,3 @@
-
 // Globale Ressourcenvariablen
 let res_money = 0;
 let res_herbs = 0;
@@ -47,19 +46,7 @@ function deleteSave() {
 }
 
 // Wird nach jedem fetch() aufgerufen
-function initSection() {
-  console.log("initSection aufgerufen");
-
-  // Übersicht
-  $("#savegame").off().on("click", saveGame);
-  $("#loadgame").off().on("click", loadGame);
-  $("#deletesave").off().on("click", deleteSave);
-
-  // Sammeln
-  $("#gather_herbs").off().on("click", () => {
-    res_herbs += 1;
-    updateDisplay();
-  });
+);
 
   $("#gather_food").off().on("click", () => {
     res_food += 1;
@@ -134,3 +121,40 @@ document.getElementById("gather_stone")?.addEventListener("click", () => {
     }
   }
 });
+
+function initSection() {
+  const woodBtn = document.getElementById("gather_wood");
+  if (woodBtn) {
+    woodBtn.addEventListener("click", () => {
+      const woodDisplay = document.getElementById("res_wood_count");
+      if (woodDisplay) {
+        let current = parseInt(woodDisplay.textContent || "0", 10);
+        woodDisplay.textContent = current + 1;
+      }
+    });
+  }
+
+  const stoneBtn = document.getElementById("gather_stone");
+  if (stoneBtn) {
+    stoneBtn.addEventListener("click", () => {
+      const stoneDisplay = document.getElementById("res_stone_count");
+      const coalDisplay = document.getElementById("res_coal_count");
+      const oreDisplay = document.getElementById("res_ore_count");
+
+      if (stoneDisplay) {
+        let current = parseInt(stoneDisplay.textContent || "0", 10);
+        stoneDisplay.textContent = current + 1;
+      }
+
+      const roll = Math.random();
+      if (roll <= 0.05) {
+        if (coalDisplay) coalDisplay.textContent = parseInt(coalDisplay.textContent || "0", 10) + 1;
+        if (oreDisplay) oreDisplay.textContent = parseInt(oreDisplay.textContent || "0", 10) + 2;
+      } else if (roll <= 0.15) {
+        if (oreDisplay) oreDisplay.textContent = parseInt(oreDisplay.textContent || "0", 10) + 2;
+      } else if (roll <= 0.30) {
+        if (coalDisplay) coalDisplay.textContent = parseInt(coalDisplay.textContent || "0", 10) + 1;
+      }
+    });
+  }
+}
