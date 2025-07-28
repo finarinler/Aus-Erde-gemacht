@@ -122,9 +122,12 @@
   const contentArea = document.getElementById("main_content");
 
   function loadSection(name) {
-    fetch(`sections/${name}.html`)
-      .then(res => res.text())
-      .then(html => {
+  fetch(`sections/${name}.html`)
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("main_content").innerHTML = html;
+      initSection();
+    });
         contentArea.innerHTML = html;
         setTimeout(() => {
           if (typeof initSection === "function") initSection();
