@@ -103,6 +103,10 @@ function saveGame() {
   localStorage.setItem("clickerSave", JSON.stringify(saveData));
   alert("Spielstand gespeichert!");
 }
+;
+  localStorage.setItem("clickerSave", JSON.stringify(saveData));
+  alert("Spielstand gespeichert!");
+}
 
 function loadGame() {
   const saveData = JSON.parse(localStorage.getItem("clickerSave"));
