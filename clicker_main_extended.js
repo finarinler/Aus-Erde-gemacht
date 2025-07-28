@@ -6,7 +6,6 @@ let res_food = 0;
 let res_wood = 0;
 let res_stone = 0;
 let res_metal = 0;
-let click_total = 0;
 
 // Aktualisiert die Anzeige im Header
 function updateDisplay() {
@@ -22,7 +21,7 @@ function updateDisplay() {
 function saveGame() {
   const state = {
     res_money, res_herbs, res_food, res_wood,
-    res_stone, res_metal, click_total
+    res_stone, res_metal
   };
   localStorage.setItem("clickerSave", JSON.stringify(state));
   alert("Spielstand gespeichert!");
@@ -37,7 +36,6 @@ function loadGame() {
     res_wood = state.res_wood;
     res_stone = state.res_stone;
     res_metal = state.res_metal;
-    click_total = state.click_total;
     updateDisplay();
     alert("Spielstand geladen!");
   }
@@ -60,13 +58,11 @@ function initSection() {
   // Sammeln
   $("#gather_herbs").off().on("click", () => {
     res_herbs += 1;
-    click_total += 1;
     updateDisplay();
   });
 
   $("#gather_food").off().on("click", () => {
     res_food += 1;
-    click_total += 1;
     updateDisplay();
   });
 
@@ -115,7 +111,7 @@ document.getElementById("gather_stone")?.addEventListener("click", () => {
   // Wahrscheinlichkeitseffekte:
   const roll = Math.random();
   if (roll <= 0.05) {
-    // 5% -> 1 Kohle & 2 Eisen
+    // 5% -> 1 Kohle & 2 Erz
     if (coalDisplay) {
       let coal = parseInt(coalDisplay.textContent || "0", 10);
       coalDisplay.textContent = coal + 1;
@@ -125,7 +121,7 @@ document.getElementById("gather_stone")?.addEventListener("click", () => {
       metalDisplay.textContent = metal + 2;
     }
   } else if (roll <= 0.15) {
-    // 10% -> 2 Eisen
+    // 10% -> 2 Erz
     if (metalDisplay) {
       let metal = parseInt(metalDisplay.textContent || "0", 10);
       metalDisplay.textContent = metal + 2;
