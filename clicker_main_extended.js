@@ -74,21 +74,64 @@ function deleteSave() {
 }
 
 function initSection() {
-  const saveBtn = document.getElementById("save_game");
-  if (saveBtn) saveBtn.addEventListener("click", saveGame);
+  // Ressourcen sammeln
+  document.getElementById("gather_herbs")?.addEventListener("click", () => {
+    res_herbs++;
+    updateDisplay();
+  });
+  document.getElementById("gather_food")?.addEventListener("click", () => {
+    res_food++;
+    updateDisplay();
+  });
+  document.getElementById("gather_wood")?.addEventListener("click", () => {
+    res_wood++;
+    updateDisplay();
+  });
+  document.getElementById("gather_stone")?.addEventListener("click", () => {
+    res_stone++;
+    // Kohle und Erz Wahrscheinlichkeit
+    let r = Math.random();
+    if (r < 0.05) {
+      res_coal++;
+      res_ore += 2;
+    } else if (r < 0.10) {
+      res_ore += 2;
+    } else if (r < 0.35) {
+      res_coal++;
+    }
+    updateDisplay();
+  });
 
-  const loadBtn = document.getElementById("load_game");
-  if (loadBtn) loadBtn.addEventListener("click", loadGame);
+  // Ressourcen verkaufen
+  const sell = (res, price) => {
+    if (res > 0) {
+      res_money += res * price;
+      return 0;
+    }
+    return res;
+  };
+  document.getElementById("sell_herbs")?.addEventListener("click", () => { res_herbs = sell(res_herbs, 1); updateDisplay(); });
+  document.getElementById("sell_food")?.addEventListener("click", () => { res_food = sell(res_food, 2); updateDisplay(); });
+  document.getElementById("sell_wood")?.addEventListener("click", () => { res_wood = sell(res_wood, 3); updateDisplay(); });
+  document.getElementById("sell_stone")?.addEventListener("click", () => { res_stone = sell(res_stone, 4); updateDisplay(); });
+  document.getElementById("sell_coal")?.addEventListener("click", () => { res_coal = sell(res_coal, 5); updateDisplay(); });
+  document.getElementById("sell_ore")?.addEventListener("click", () => { res_ore = sell(res_ore, 10); updateDisplay(); });
 
-  const deleteBtn = document.getElementById("delete_game");
-  if (deleteBtn) deleteBtn.addEventListener("click", deleteSave);
+  document.getElementById("sell_all")?.addEventListener("click", () => {
+    res_herbs = sell(res_herbs, 1);
+    res_food = sell(res_food, 2);
+    res_wood = sell(res_wood, 3);
+    res_stone = sell(res_stone, 4);
+    res_coal = sell(res_coal, 5);
+    res_ore = sell(res_ore, 10);
+    updateDisplay();
+  });
 
-  const herbsBtn = document.getElementById("gather_herbs");
-  if (herbsBtn) {
-    herbsBtn.addEventListener("click", () => {
-      res_herbs += 1;
-      updateDisplay();
-    });
+  // Speicherfunktionen
+  document.getElementById("save_game")?.addEventListener("click", saveGame);
+  document.getElementById("load_game")?.addEventListener("click", loadGame);
+  document.getElementById("delete_game")?.addEventListener("click", deleteSave);
+});
   }
 
   const foodBtn = document.getElementById("gather_food");
