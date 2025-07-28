@@ -1,4 +1,3 @@
-
 // === Ressourcen ===
 let res_money = 0;
 let res_herbs = 0;
@@ -152,3 +151,93 @@ document.addEventListener("DOMContentLoaded", () => {
     updateMarketPreview();
   }
 });
+
+
+function handleSell() {
+  const resourcePrices = {
+    herbs: 0.5,
+    food: 1,
+    wood: 1.5,
+    stone: 2,
+    coal: 3,
+    ore: 4
+  };
+
+  const quantities = {};
+  let totalQuantity = 0;
+  let baseValue = 0;
+
+  for (const res in resourcePrices) {
+    const input = document.getElementById(`sell_${res}`);
+    if (!input) continue;
+
+    const quantity = parseInt(input.value) || 0;
+    if (quantity < 0) continue;
+
+    if (resources[res] >= quantity) {
+      quantities[res] = quantity;
+      totalQuantity += quantity;
+      baseValue += quantity * resourcePrices[res];
+    }
+  }
+
+  // Rabattlogik basierend auf totalQuantity
+  let discount = 0;
+  if (totalQuantity >= 5001) discount = 0.75;
+  else if (totalQuantity >= 2501) discount = 0.5;
+  else if (totalQuantity >= 1001) discount = 0.4;
+  else if (totalQuantity >= 501) discount = 0.3;
+  else if (totalQuantity >= 251) discount = 0.2;
+  else if (totalQuantity >= 101) discount = 0.1;
+
+  const finalValue = baseValue * (1 - discount);
+  // Erz wird mitverkauft wie gewünscht
+  resources.money += finalValue;
+
+  // Abziehen der verkauften Ressourcen
+  for (const res in quantities) {
+    resources[res] -= quantities[res];
+  }
+
+  updateDisplay();
+
+  const msg = `✅ Verkauf erfolgreich! Du hast ${finalValue.toFixed(2)} Münzen erhalten.`;
+  document.getElementById("market_output").innerText = msg;
+}
+
+function previewSellValue() {
+  const resourcePrices = {
+    herbs: 0.5,
+    food: 1,
+    wood: 1.5,
+    stone: 2,
+    coal: 3,
+    ore: 4
+  };
+
+  let total = 0;
+  let quantitySum = 0;
+
+  for (const res in resourcePrices) {
+    const input = document.getElementById(`sell_${res}`);
+    if (!input) continue;
+
+    const qty = parseInt(input.value) || 0;
+    if (qty < 0) continue;
+
+    total += qty * resourcePrices[res];
+    quantitySum += qty;
+  }
+
+  let discount = 0;
+  if (quantitySum >= 5001) discount = 0.75;
+  else if (quantitySum >= 2501) discount = 0.5;
+  else if (quantitySum >= 1001) discount = 0.4;
+  else if (quantitySum >= 501) discount = 0.3;
+  else if (quantitySum >= 251) discount = 0.2;
+  else if (quantitySum >= 101) discount = 0.1;
+
+  const final = total * (1 - discount);
+  const preview = `💰 Vorschau: ${final.toFixed(2)} Münzen`;
+  document.getElementById("market_output").innerText = preview;
+}
