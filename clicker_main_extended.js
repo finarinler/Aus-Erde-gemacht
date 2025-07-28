@@ -89,8 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function calculateDiscountedPrice(qty, basePrice) {
     let discount = 0;
-    if (qty >= 7501) discount = 0.75;
-    else if (qty >= 2001) discount = 0.5;
+    if (qty >= 5001) discount = 0.75;
+    else if (qty >= 2501) discount = 0.5;
     else if (qty >= 1001) discount = 0.4;
     else if (qty >= 501) discount = 0.3;
     else if (qty >= 251) discount = 0.2;
@@ -241,3 +241,19 @@ function previewSellValue() {
   const preview = `💰 Vorschau: ${final.toFixed(2)} Münzen`;
   document.getElementById("market_output").innerText = preview;
 }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sellBtn = document.getElementById("sell_button");
+  if (sellBtn) {
+    sellBtn.addEventListener("click", handleSell);
+  }
+
+  const resList = ["herbs", "food", "wood", "stone", "coal", "ore"];
+  resList.forEach(res => {
+    const input = document.getElementById("sell_" + res);
+    if (input) {
+      input.addEventListener("input", previewSellValue);
+    }
+  });
+});
