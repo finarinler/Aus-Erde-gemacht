@@ -44,6 +44,6 @@ document.addEventListener("click", function (e) {
     spawnParticle(x, y, "🪵");
   }
   else if (target.id === "gather_stone") {
-    spawnParticle(x, y, "🪨");
+    spawnParticle(x, y, "🧱");
   }
 });
