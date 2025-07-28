@@ -74,7 +74,7 @@ function initSection() {
   // Verkauf
   $("#sell_all").off().on("click", () => {
     const total =
-      res_herbs * 2 +
+      res_herbs * 0.5 +
       res_food * 1 +
       res_wood * 1.5 +
       res_stone * 2 +
