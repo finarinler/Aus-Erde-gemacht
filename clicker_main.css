@@ -214,3 +214,10 @@ input[type="number"] {
 .ressourcen-container .ressource div {
   color: white;
 }
+
+.ressourcen-container .ressource {
+  background-color: #222;
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin: 2px;
+}
