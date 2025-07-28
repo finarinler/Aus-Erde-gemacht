@@ -124,12 +124,28 @@ function initSection() {
   const woodBtn = document.getElementById("gather_wood");
   if (woodBtn) {
     woodBtn.addEventListener("click", () => {
-      const woodDisplay = document.getElementById("res_wood_count");
-      if (woodDisplay) {
-        let current = parseInt(woodDisplay.textContent || "0", 10);
-        woodDisplay.textContent = current + 1;
-      }
+      res_wood += 1;
+      updateDisplay();
     });
+  }
+
+  const stoneBtn = document.getElementById("gather_stone");
+  if (stoneBtn) {
+    stoneBtn.addEventListener("click", () => {
+      res_stone += 1;
+      const roll = Math.random();
+      if (roll <= 0.05) {
+        res_coal += 1;
+        res_ore += 2;
+      } else if (roll <= 0.15) {
+        res_ore += 2;
+      } else if (roll <= 0.30) {
+        res_coal += 1;
+      }
+      updateDisplay();
+    });
+  }
+}});
   }
 
   const stoneBtn = document.getElementById("gather_stone");
