@@ -75,10 +75,91 @@ function deleteSave() {
 
 function initSection() {
   // Ressourcen sammeln
-  document.getElementById("gather_herbs")?.addEventListener("click", () => {
+  const $ = (id) => document.getElementById(id);
+
+  $("gather_herbs")?.addEventListener("click", () => {
     res_herbs++;
     updateDisplay();
   });
+
+  $("gather_food")?.addEventListener("click", () => {
+    res_food++;
+    updateDisplay();
+  });
+
+  $("gather_wood")?.addEventListener("click", () => {
+    res_wood++;
+    updateDisplay();
+  });
+
+  $("gather_stone")?.addEventListener("click", () => {
+    res_stone++;
+    let r = Math.random();
+    if (r < 0.05) {
+      res_coal++;
+      res_ore += 2;
+    } else if (r < 0.10) {
+      res_ore += 2;
+    } else if (r < 0.35) {
+      res_coal++;
+    }
+    updateDisplay();
+  });
+
+  // Verkaufsfunktion
+  const sell = (amount, price) => {
+    if (amount > 0) {
+      res_money += amount * price;
+      return 0;
+    }
+    return amount;
+  };
+
+  $("sell_herbs")?.addEventListener("click", () => {
+    res_herbs = sell(res_herbs, 1);
+    updateDisplay();
+  });
+
+  $("sell_food")?.addEventListener("click", () => {
+    res_food = sell(res_food, 2);
+    updateDisplay();
+  });
+
+  $("sell_wood")?.addEventListener("click", () => {
+    res_wood = sell(res_wood, 3);
+    updateDisplay();
+  });
+
+  $("sell_stone")?.addEventListener("click", () => {
+    res_stone = sell(res_stone, 4);
+    updateDisplay();
+  });
+
+  $("sell_coal")?.addEventListener("click", () => {
+    res_coal = sell(res_coal, 5);
+    updateDisplay();
+  });
+
+  $("sell_ore")?.addEventListener("click", () => {
+    res_ore = sell(res_ore, 10);
+    updateDisplay();
+  });
+
+  $("sell_all")?.addEventListener("click", () => {
+    res_herbs = sell(res_herbs, 1);
+    res_food = sell(res_food, 2);
+    res_wood = sell(res_wood, 3);
+    res_stone = sell(res_stone, 4);
+    res_coal = sell(res_coal, 5);
+    res_ore = sell(res_ore, 10);
+    updateDisplay();
+  });
+
+  // Speichern, Laden, Löschen
+  $("save_game")?.addEventListener("click", saveGame);
+  $("load_game")?.addEventListener("click", loadGame);
+  $("delete_game")?.addEventListener("click", deleteSave);
+});
   document.getElementById("gather_food")?.addEventListener("click", () => {
     res_food++;
     updateDisplay();
