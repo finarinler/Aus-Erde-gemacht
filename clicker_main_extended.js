@@ -273,3 +273,52 @@ function initMarketplaceEvents() {
     }
   });
 }
+
+function saveGame() {
+  const data = {
+    herbs: herbs,
+    food: food,
+    wood: wood,
+    stone: stone,
+    coal: coal,
+    ore: ore,
+    coins: coins
+  };
+  localStorage.setItem("clickerGameSave", JSON.stringify(data));
+  displayMarketMessage("Spiel gespeichert.");
+}
+
+function loadGame() {
+  const saved = localStorage.getItem("clickerGameSave");
+  if (saved) {
+    const data = JSON.parse(saved);
+    herbs = data.herbs || 0;
+    food = data.food || 0;
+    wood = data.wood || 0;
+    stone = data.stone || 0;
+    coal = data.coal || 0;
+    ore = data.ore || 0;
+    coins = data.coins || 0;
+    updateDisplay();
+    displayMarketMessage("Spiel geladen.");
+  } else {
+    displayMarketMessage("Kein Speicherstand gefunden.");
+  }
+}
+
+function deleteGame() {
+  localStorage.removeItem("clickerGameSave");
+  herbs = food = wood = stone = coal = ore = coins = 0;
+  updateDisplay();
+  displayMarketMessage("Spielstand gelöscht.");
+}
+
+function initOverviewEvents() {
+  const saveBtn = document.getElementById("save_game");
+  const loadBtn = document.getElementById("load_game");
+  const delBtn = document.getElementById("delete_game");
+
+  if (saveBtn) saveBtn.addEventListener("click", saveGame);
+  if (loadBtn) loadBtn.addEventListener("click", loadGame);
+  if (delBtn) delBtn.addEventListener("click", deleteGame);
+}
