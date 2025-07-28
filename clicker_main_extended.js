@@ -11,9 +11,7 @@ function updateDisplay() {
   document.getElementById("res_money_count").textContent = res_money;
   document.getElementById("res_herbs_count").textContent = res_herbs;
   document.getElementById("res_food_count").textContent = res_food;
-  document.getElementById("res_wood_count").textContent = res_wood;
-  document.getElementById("res_stone_count").textContent = res_stone;
-  document.getElementById("res_ore_count").textContent = res_metal;
+      document.getElementById("res_ore_count").textContent = res_metal;
 }
 
 // Speicherfunktionen
