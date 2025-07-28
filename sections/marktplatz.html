@@ -1,10 +1,14 @@
-<h2>Marktplatz</h2>
-<div class="markt-container">
-  <button id="sell_herbs">🌿 Kräuter verkaufen</button>
-  <button id="sell_food">🍖 Nahrung verkaufen</button>
-  <button id="sell_wood">🪵 Holz verkaufen</button>
-  <button id="sell_stone">🧱 Stein verkaufen</button>
-  <button id="sell_coal">⚫ Kohle verkaufen</button>
-  <button id="sell_ore">🪨 Erz verkaufen</button>
-  <button id="sell_all">💰 Alles verkaufen</button>
+
+<h1>🛒 Marktplatz</h1>
+<p>Verkaufe deine Ressourcen und erhalte Münzen!</p>
+<div class="market-form">
+  <label>🌿 Kräuter: <input type="number" id="sell_herbs" min="0" value="0" /></label><br>
+  <label>🍎 Nahrung: <input type="number" id="sell_food" min="0" value="0" /></label><br>
+  <label>🪵 Holz: <input type="number" id="sell_wood" min="0" value="0" /></label><br>
+  <label>🧱 Stein: <input type="number" id="sell_stone" min="0" value="0" /></label><br>
+  <label>⚫ Kohle: <input type="number" id="sell_coal" min="0" value="0" /></label><br>
+  <label>🪨 Erz: <input type="number" id="sell_ore" min="0" value="0" /></label><br>
+  <button id="sell_button">Verkaufen</button>
 </div>
+<p id="market_output"></p>
+<script src="../scripts/marktplatz_logic.js"></script>
