@@ -15,3 +15,51 @@
   <button id="delete_game">🗑️ Spielstand löschen</button>
 </div>
 </section>
+
+
+<script>
+  function updateDisplay() {
+    document.getElementById("res_money_count").textContent = res_money || 0;
+    document.getElementById("res_herbs_count").textContent = res_herbs || 0;
+    document.getElementById("res_food_count").textContent = res_food || 0;
+    document.getElementById("res_wood_count").textContent = res_wood || 0;
+    document.getElementById("res_stone_count").textContent = res_stone || 0;
+    document.getElementById("res_coal_count").textContent = res_coal || 0;
+    document.getElementById("res_ore_count").textContent = res_ore || 0;
+  }
+
+  document.getElementById("save_game")?.addEventListener("click", () => {
+    const data = {
+      res_money,
+      res_herbs,
+      res_food,
+      res_wood,
+      res_stone,
+      res_coal,
+      res_ore
+    };
+    localStorage.setItem("clickerSave", JSON.stringify(data));
+    alert("Spiel gespeichert!");
+  });
+
+  document.getElementById("load_game")?.addEventListener("click", () => {
+    const data = JSON.parse(localStorage.getItem("clickerSave"));
+    if (data) {
+      res_money = data.res_money || 0;
+      res_herbs = data.res_herbs || 0;
+      res_food = data.res_food || 0;
+      res_wood = data.res_wood || 0;
+      res_stone = data.res_stone || 0;
+      res_coal = data.res_coal || 0;
+      res_ore = data.res_ore || 0;
+      updateDisplay();
+    }
+  });
+
+  document.getElementById("delete_game")?.addEventListener("click", () => {
+    localStorage.removeItem("clickerSave");
+    res_money = res_herbs = res_food = res_wood = res_stone = res_coal = res_ore = 0;
+    updateDisplay();
+    alert("Spielstand gelöscht.");
+  });
+</script>
