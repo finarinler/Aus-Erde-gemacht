@@ -15,7 +15,7 @@ function updateDisplay() {
   document.getElementById("res_food_count").textContent = res_food;
   document.getElementById("res_wood_count").textContent = res_wood;
   document.getElementById("res_stone_count").textContent = res_stone;
-  document.getElementById("res_metal_count").textContent = res_metal;
+  document.getElementById("res_ore_count").textContent = res_metal;
 }
 
 // Speicherfunktionen
@@ -105,7 +105,7 @@ document.getElementById("gather_wood")?.addEventListener("click", () => {
 document.getElementById("gather_stone")?.addEventListener("click", () => {
   const stoneDisplay = document.getElementById("res_stone_count");
   const coalDisplay = document.getElementById("res_coal_count");
-  const metalDisplay = document.getElementById("res_metal_count");
+  const metalDisplay = document.getElementById("res_ore_count");
 
   if (stoneDisplay) {
     let current = parseInt(stoneDisplay.textContent || "0", 10);
