@@ -89,3 +89,13 @@ window.addEventListener("DOMContentLoaded", () => {
   loadGame();
   updateDisplay();
 });
+
+
+
+document.getElementById("gather_wood")?.addEventListener("click", () => {
+  const display = document.getElementById("res_wood_count");
+  if (display) {
+    let current = parseInt(display.textContent || "0", 10);
+    display.textContent = current + 1;
+  }
+});
