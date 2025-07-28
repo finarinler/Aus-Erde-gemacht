@@ -275,6 +275,7 @@ function initMarketplaceEvents() {
 }
 
 function saveGame() {
+  showMessage("💾 Spiel gespeichert!", "green");
   const data = {
     herbs: herbs,
     food: food,
@@ -289,6 +290,7 @@ function saveGame() {
 }
 
 function loadGame() {
+  showMessage("📂 Spiel geladen!", "blue");
   const saved = localStorage.getItem("clickerGameSave");
   if (saved) {
     const data = JSON.parse(saved);
@@ -307,6 +309,7 @@ function loadGame() {
 }
 
 function deleteGame() {
+  showMessage("🗑️ Spielstand gelöscht!", "red");
   localStorage.removeItem("clickerGameSave");
   herbs = food = wood = stone = coal = ore = coins = 0;
   updateDisplay();
@@ -331,4 +334,56 @@ function bindOverviewButtons() {
   if (saveBtn) saveBtn.addEventListener("click", saveGame);
   if (loadBtn) loadBtn.addEventListener("click", loadGame);
   if (deleteBtn) deleteBtn.addEventListener("click", deleteGame);
+}
+
+
+
+function showMessage(message, color = "green") {
+  const msg = document.createElement("div");
+  msg.textContent = message;
+  msg.style.position = "fixed";
+  msg.style.bottom = "20px";
+  msg.style.left = "50%";
+  msg.style.transform = "translateX(-50%)";
+  msg.style.backgroundColor = color;
+  msg.style.color = "white";
+  msg.style.padding = "10px 20px";
+  msg.style.borderRadius = "10px";
+  msg.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+  msg.style.zIndex = 9999;
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 2500);
+}
+
+
+
+function showMessage(message, color = "green") {
+  const msg = document.createElement("div");
+  msg.textContent = message;
+  msg.style.position = "fixed";
+  msg.style.bottom = "20px";
+  msg.style.left = "50%";
+  msg.style.transform = "translateX(-50%)";
+  msg.style.backgroundColor = color;
+  msg.style.color = "white";
+  msg.style.padding = "10px 20px";
+  msg.style.borderRadius = "10px";
+  msg.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+  msg.style.zIndex = 9999;
+  
+  msg.style.opacity = "0";
+  msg.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+  document.body.appendChild(msg);
+  requestAnimationFrame(() => {
+    msg.style.opacity = "1";
+    msg.style.transform = "translateX(-50%) translateY(-10px)";
+  });
+    
+  
+  setTimeout(() => {
+    msg.style.opacity = "0";
+    msg.style.transform = "translateX(-50%) translateY(10px)";
+    setTimeout(() => msg.remove(), 300);
+  }, 2500);
+    
 }
