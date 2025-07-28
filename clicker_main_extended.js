@@ -113,12 +113,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateMarketPreview() {
       let total = 0;
-      let text = "Verkaufswert:";}
+      let text = "Verkaufswert:
+";
       for (let res in inputs) {
         let qty = parseInt(inputs[res].value) || 0;
         let price = calculateDiscountedPrice(qty, priceMap[res]);
         if (qty > 0) {
-          text += `• ${qty} ${res} ➜ ${price.toFixed(2)} Münzen`;
+          text += `• ${qty} ${res} ➜ ${price.toFixed(2)} Münzen
+`;
         }
         total += price;
       }
