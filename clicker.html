@@ -11,7 +11,7 @@
 <body>
   <header class="header">
     <div class="logo"><b>Aus Erde gemacht</b></div>
-    <h6><i>Alpha_Build - Version 0.0.0.101</i></h6>
+    <h6><i>Alpha_Build - Version 0.0.0.102</i></h6>
 
     <div class="ressourcen-container">
       <div class="ressource"><div class="label">🪙 Münzen</div><div id="res_money_count">0</div></div>
@@ -54,7 +54,6 @@
     bindClick("gather_herbs", () => { res_herbs++; updateDisplay(); });
     bindClick("gather_food", () => { res_food++; updateDisplay(); });
     bindClick("gather_wood", () => { res_wood++; updateDisplay(); });
-
     bindClick("gather_stone", () => {
       res_stone++;
       const r = Math.random();

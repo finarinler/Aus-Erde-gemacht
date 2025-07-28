@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const roll = Math.random();
     if (roll <= 0.05) { res_coal++; res_ore += 2; }
     else if (roll <= 0.10) { res_ore += 2; }
-    else if (roll <= 0.25) { res_coal++; }
+    else if (roll <= 0.15) { res_coal++; }
     updateDisplay();
   });
 
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     food: 1,
     wood: 1.5,
     stone: 2,
-    coal: 3,
+    coal: 2.5,
     ore: 4,
   };
 
