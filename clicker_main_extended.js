@@ -322,3 +322,13 @@ function initOverviewEvents() {
   if (loadBtn) loadBtn.addEventListener("click", loadGame);
   if (delBtn) delBtn.addEventListener("click", deleteGame);
 }
+
+
+function bindOverviewButtons() {
+  const saveBtn = document.getElementById("save_game");
+  const loadBtn = document.getElementById("load_game");
+  const deleteBtn = document.getElementById("delete_game");
+  if (saveBtn) saveBtn.addEventListener("click", saveGame);
+  if (loadBtn) loadBtn.addEventListener("click", loadGame);
+  if (deleteBtn) deleteBtn.addEventListener("click", deleteGame);
+}
