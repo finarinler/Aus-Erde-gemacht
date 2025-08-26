@@ -1,389 +1,290 @@
-// === Ressourcen ===
-let res_money = 0;
-let res_herbs = 0;
-let res_food = 0;
-let res_wood = 0;
-let res_stone = 0;
-let res_coal = 0;
-let res_ore = 0;
+/* =========================================================================
+   Aus-Erde-gemacht – main logic (clean build)
+   - Sammeln (herbs, food, wood, stone + coal/ore drops)
+   - Anzeigen aktualisieren
+   - Speichern / Laden / Löschen (localStorage)
+   - Marktplatz (Vorschau + Verkauf mit Rabatten)
+   ====================================================================== */
+
+console.log("Script loaded: clicker_main_extended.js");
+
+// --------------------------- Utilities ---------------------------------
+const $ = (id) => document.getElementById(id);
+const hasEl = (id) => !!$(id);
+
+// Sanfte Toast-Nachricht
+function showMessage(message, bg = "#2b3e5e") {
+  const msg = document.createElement("div");
+  msg.textContent = message;
+  Object.assign(msg.style, {
+    position: "fixed",
+    bottom: "20px",
+    left: "50%",
+    transform: "translateX(-50%) translateY(10px)",
+    background: bg,
+    color: "white",
+    padding: "10px 16px",
+    borderRadius: "10px",
+    boxShadow: "0 4px 14px rgba(0,0,0,.25)",
+    zIndex: 9999,
+    opacity: "0",
+    transition: "opacity .3s ease, transform .3s ease",
+    pointerEvents: "none",
+  });
+  document.body.appendChild(msg);
+  requestAnimationFrame(() => {
+    msg.style.opacity = "1";
+    msg.style.transform = "translateX(-50%) translateY(-4px)";
+  });
+  setTimeout(() => {
+    msg.style.opacity = "0";
+    msg.style.transform = "translateX(-50%) translateY(8px)";
+    setTimeout(() => msg.remove(), 300);
+  }, 2200);
+}
+
+// --------------------------- Game State --------------------------------
+const state = {
+  coins: 0,
+  herbs: 0,
+  food: 0,
+  wood: 0,
+  stone: 0,
+  coal: 0,
+  ore: 0, // nur via Stone-Drops
+};
+
+const BASE_PRICES = {
+  herbs: 0.5,
+  food: 1,
+  wood: 1.5,
+  stone: 2,
+  coal: 3,
+  ore: 4,
+};
+
+// ----------------------- Rendering / Anzeige ----------------------------
+function setText(id, value) {
+  const el = $(id);
+  if (el) el.textContent = String(value);
+}
 
 function updateDisplay() {
-  const set = (id, val) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = val;
-  };
-  set("res_money_count", res_money);
-  set("res_herbs_count", res_herbs);
-  set("res_food_count", res_food);
-  set("res_wood_count", res_wood);
-  set("res_stone_count", res_stone);
-  set("res_coal_count", res_coal);
-  set("res_metal_count", res_ore);
+  setText("res_money_count", state.coins.toFixed(2));
+  setText("res_herbs_count", state.herbs);
+  setText("res_food_count", state.food);
+  setText("res_wood_count", state.wood);
+  setText("res_stone_count", state.stone);
+  setText("res_coal_count", state.coal);
+  setText("res_ore_count", state.ore);
+  updateSalePreview();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  updateDisplay();
-
-  // === GATHER ===
-  const gather = (id, action) => {
-    const btn = document.getElementById(id);
-    if (btn) btn.addEventListener("click", action);
-  };
-
-  gather("gather_herbs", () => { res_herbs++; updateDisplay(); });
-  gather("gather_food", () => { res_food++; updateDisplay(); });
-  gather("gather_wood", () => { res_wood++; updateDisplay(); });
-  gather("gather_stone", () => {
-    res_stone++;
-    const roll = Math.random();
-    if (roll <= 0.05) { res_coal++; res_ore += 2; }
-    else if (roll <= 0.10) { res_ore += 2; }
-    else if (roll <= 0.15) { res_coal++; }
-    updateDisplay();
-  });
-
-  // === Speicherfunktion (Overview only) ===
-  const save = document.getElementById("save_game");
-  const load = document.getElementById("load_game");
-  const del = document.getElementById("delete_game");
-
-  if (save) save.addEventListener("click", () => {
-    localStorage.setItem("clickerSave", JSON.stringify({
-      money: res_money,
-      herbs: res_herbs,
-      food: res_food,
-      wood: res_wood,
-      stone: res_stone,
-      coal: res_coal,
-      ore: res_ore
-    }));
-  });
-
-  if (load) load.addEventListener("click", () => {
-    const data = JSON.parse(localStorage.getItem("clickerSave") || "{}");
-    res_money = data.money || 0;
-    res_herbs = data.herbs || 0;
-    res_food = data.food || 0;
-    res_wood = data.wood || 0;
-    res_stone = data.stone || 0;
-    res_coal = data.coal || 0;
-    res_ore = data.ore || 0;
-    updateDisplay();
-  });
-
-  if (del) del.addEventListener("click", () => {
-    localStorage.removeItem("clickerSave");
-    res_money = res_herbs = res_food = res_wood = res_stone = res_coal = res_ore = 0;
-    updateDisplay();
-  });
-
-  // === MARKTPLATZ ===
-  const priceMap = {
-    herbs: 0.5,
-    food: 1,
-    wood: 1.5,
-    stone: 2,
-    coal: 2.5,
-    ore: 4,
-  };
-
-  function calculateDiscountedPrice(qty, basePrice) {
-    let discount = 0;
-    if (qty >= 5001) discount = 0.75;
-    else if (qty >= 2501) discount = 0.5;
-    else if (qty >= 1001) discount = 0.4;
-    else if (qty >= 501) discount = 0.3;
-    else if (qty >= 251) discount = 0.2;
-    else if (qty >= 101) discount = 0.1;
-    return basePrice * qty * (1 - discount);
-  }
-
-  const preview = document.getElementById("market_preview");
-  const sellBtn = document.getElementById("sell_button");
-  if (sellBtn && preview) {
-    const inputs = {
-      herbs: document.getElementById("sell_herbs"),
-      food: document.getElementById("sell_food"),
-      wood: document.getElementById("sell_wood"),
-      stone: document.getElementById("sell_stone"),
-      coal: document.getElementById("sell_coal"),
-      ore: document.getElementById("sell_ore"),
-    };
-
-    function updateMarketPreview() {
-      let total = 0;
-      let text = `Verkaufswert:\n`;
-      for (let res in inputs) {
-        let qty = parseInt(inputs[res].value) || 0;
-        let price = calculateDiscountedPrice(qty, priceMap[res]);
-        if (qty > 0) {
-          text += `• ${qty} ${res} ➜ ${price.toFixed(2)} Münzen
-`;
+// ----------------------------- Sammeln ---------------------------------
+function gather(resource) {
+  switch (resource) {
+    case "herbs":
+      state.herbs += 1;
+      showMessage("🌿 +1 Kräuter");
+      break;
+    case "food":
+      state.food += 1;
+      showMessage("🍗 +1 Nahrung");
+      break;
+    case "wood":
+      state.wood += 1;
+      showMessage("🪵 +1 Holz");
+      break;
+    case "stone":
+      state.stone += 1;
+      const roll = Math.random();
+      let dropMsg = "🧱 +1 Stein";
+      if (roll < 0.05) {
+        state.coal += 1;
+        state.ore += 2;
+        dropMsg += " • ⚫ +1 Kohle • 🧱🪨 +2 Erz";
+      } else {
+        if (Math.random() < 0.05) {
+          state.ore += 2;
+          dropMsg += " • 🧱🪨 +2 Erz";
         }
-        total += price;
-      }
-      text += `
-💰 Gesamt: ${total.toFixed(2)} Münzen`;
-      preview.textContent = text;
-    }
-
-    Object.values(inputs).forEach(input =>
-      input.addEventListener("input", updateMarketPreview)
-    );
-
-    sellBtn.addEventListener("click", () => {
-      let earned = 0;
-      for (let res in inputs) {
-        let qty = parseInt(inputs[res].value) || 0;
-        if (qty > 0 && window["res_" + res] >= qty) {
-          let price = calculateDiscountedPrice(qty, priceMap[res]);
-          earned += price;
-          window["res_" + res] -= qty;
-          inputs[res].value = 0;
+        if (Math.random() < 0.25) {
+          state.coal += 1;
+          dropMsg += " • ⚫ +1 Kohle";
         }
       }
-      res_money += earned;
-      updateDisplay();
-      updateMarketPreview();
-      document.getElementById("market_output").textContent = `✅ Du hast ${earned.toFixed(2)} Münzen erhalten.`;
-    });
-
-    updateMarketPreview();
+      showMessage(dropMsg);
+      break;
+    default:
+      return;
   }
-});
-
-
-function handleSell() {
-  const resourcePrices = {
-    herbs: 0.5,
-    food: 1,
-    wood: 1.5,
-    stone: 2,
-    coal: 3,
-    ore: 4
-  };
-
-  const quantities = {};
-  let totalQuantity = 0;
-  let baseValue = 0;
-
-  for (const res in resourcePrices) {
-    const input = document.getElementById(`sell_${res}`);
-    if (!input) continue;
-
-    const quantity = parseInt(input.value) || 0;
-    if (quantity < 0) continue;
-
-    if (resources[res] >= quantity) {
-      quantities[res] = quantity;
-      totalQuantity += quantity;
-      baseValue += quantity * resourcePrices[res];
-    }
-  }
-
-  // Rabattlogik basierend auf totalQuantity
-  let discount = 0;
-  if (totalQuantity >= 5001) discount = 0.75;
-  else if (totalQuantity >= 2501) discount = 0.5;
-  else if (totalQuantity >= 1001) discount = 0.4;
-  else if (totalQuantity >= 501) discount = 0.3;
-  else if (totalQuantity >= 251) discount = 0.2;
-  else if (totalQuantity >= 101) discount = 0.1;
-
-  const finalValue = baseValue * (1 - discount);
-  // Erz wird mitverkauft wie gewünscht
-  resources.money += finalValue;
-
-  // Abziehen der verkauften Ressourcen
-  for (const res in quantities) {
-    resources[res] -= quantities[res];
-  }
-
   updateDisplay();
-
-  const msg = `✅ Verkauf erfolgreich! Du hast ${finalValue.toFixed(2)} Münzen erhalten.`;
-  document.getElementById("market_output").innerText = msg;
 }
 
-function previewSellValue() {
-  const resourcePrices = {
-    herbs: 0.5,
-    food: 1,
-    wood: 1.5,
-    stone: 2,
-    coal: 3,
-    ore: 4
-  };
-
-  let total = 0;
-  let quantitySum = 0;
-
-  for (const res in resourcePrices) {
-    const input = document.getElementById(`sell_${res}`);
-    if (!input) continue;
-
-    const qty = parseInt(input.value) || 0;
-    if (qty < 0) continue;
-
-    total += qty * resourcePrices[res];
-    quantitySum += qty;
-  }
-
-  let discount = 0;
-  if (quantitySum >= 5001) discount = 0.75;
-  else if (quantitySum >= 2501) discount = 0.5;
-  else if (quantitySum >= 1001) discount = 0.4;
-  else if (quantitySum >= 501) discount = 0.3;
-  else if (quantitySum >= 251) discount = 0.2;
-  else if (quantitySum >= 101) discount = 0.1;
-
-  const final = total * (1 - discount);
-  const preview = `💰 Vorschau: ${final.toFixed(2)} Münzen`;
-  document.getElementById("market_output").innerText = preview;
-}
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  const sellBtn = document.getElementById("sell_button");
-  if (sellBtn) {
-    sellBtn.addEventListener("click", handleSell);
-  }
-
-  const resList = ["herbs", "food", "wood", "stone", "coal", "ore"];
-  resList.forEach(res => {
-    const input = document.getElementById("sell_" + res);
-    if (input) {
-      input.addEventListener("input", previewSellValue);
-    }
-  });
-});
-
-
-function initMarketplaceEvents() {
-  const sellBtn = document.getElementById("sell_button");
-  if (sellBtn) {
-    sellBtn.addEventListener("click", handleSell);
-  }
-
-  const resList = ["herbs", "food", "wood", "stone", "coal", "ore"];
-  resList.forEach(res => {
-    const input = document.getElementById("sell_" + res);
-    if (input) {
-      input.addEventListener("input", previewSellValue);
-    }
-  });
-}
+// ----------------------- Speicher / Laden / Löschen ---------------------
+const SAVE_KEY = "aeg_save_v1";
 
 function saveGame() {
-  showMessage("💾 Spiel gespeichert!", "green");
-  const data = {
-    herbs: herbs,
-    food: food,
-    wood: wood,
-    stone: stone,
-    coal: coal,
-    ore: ore,
-    coins: coins
-  };
-  localStorage.setItem("clickerGameSave", JSON.stringify(data));
-  displayMarketMessage("Spiel gespeichert.");
+  try {
+    const payload = { ...state, ts: Date.now() };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
+    showMessage("💾 Spiel gespeichert!", "#2e7d32");
+  } catch (e) {
+    console.error("Save failed:", e);
+    showMessage("❌ Speichern fehlgeschlagen!", "#b71c1c");
+  }
 }
 
 function loadGame() {
-  showMessage("📂 Spiel geladen!", "blue");
-  const saved = localStorage.getItem("clickerGameSave");
-  if (saved) {
-    const data = JSON.parse(saved);
-    herbs = data.herbs || 0;
-    food = data.food || 0;
-    wood = data.wood || 0;
-    stone = data.stone || 0;
-    coal = data.coal || 0;
-    ore = data.ore || 0;
-    coins = data.coins || 0;
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) {
+      showMessage("ℹ️ Kein Spielstand gefunden.", "#455a64");
+      return;
+    }
+    const data = JSON.parse(raw);
+    for (const k of Object.keys(state)) {
+      if (typeof data[k] === "number" && Number.isFinite(data[k])) {
+        state[k] = data[k];
+      }
+    }
     updateDisplay();
-    displayMarketMessage("Spiel geladen.");
-  } else {
-    displayMarketMessage("Kein Speicherstand gefunden.");
+    showMessage("📂 Spiel geladen!", "#1565c0");
+  } catch (e) {
+    console.error("Load failed:", e);
+    showMessage("❌ Laden fehlgeschlagen!", "#b71c1c");
   }
 }
 
 function deleteGame() {
-  showMessage("🗑️ Spielstand gelöscht!", "red");
-  localStorage.removeItem("clickerGameSave");
-  herbs = food = wood = stone = coal = ore = coins = 0;
+  try {
+    localStorage.removeItem(SAVE_KEY);
+    for (const k of Object.keys(state)) state[k] = 0;
+    updateDisplay();
+    showMessage("🗑️ Spielstand gelöscht!", "#b71c1c");
+  } catch (e) {
+    console.error("Delete failed:", e);
+    showMessage("❌ Löschen fehlgeschlagen!", "#b71c1c");
+  }
+}
+
+// ---------------------------- Marktplatz --------------------------------
+const SELL_FIELDS = ["herbs","food","wood","stone","coal","ore"];
+
+function readSellQuantities() {
+  const q = {};
+  let total = 0;
+  for (const r of SELL_FIELDS) {
+    const el = $(`sell_${r}`);
+    const v = el ? Math.max(0, Math.floor(Number(el.value) || 0)) : 0;
+    q[r] = v;
+    total += v;
+  }
+  return { q, total };
+}
+
+function calcDiscount(totalQty) {
+  if (totalQty >= 5001) return 0.75;
+  if (totalQty >= 2501) return 0.50;
+  if (totalQty >= 1001) return 0.40;
+  if (totalQty >= 501)  return 0.30;
+  if (totalQty >= 251)  return 0.20;
+  if (totalQty >= 101)  return 0.10;
+  return 0;
+}
+
+function calcSaleValue(q) {
+  let base = 0;
+  for (const r of SELL_FIELDS) {
+    const qty = q[r] || 0;
+    const price = BASE_PRICES[r] ?? 0;
+    base += qty * price;
+  }
+  const totalQty = SELL_FIELDS.reduce((s, r) => s + (q[r] || 0), 0);
+  const disc = calcDiscount(totalQty);
+  const finalValue = base * (1 - disc);
+  return { base, disc, totalQty, finalValue };
+}
+
+function updateSalePreview() {
+  const pv = $("sale_preview");
+  if (!pv) return;
+  const { q } = readSellQuantities();
+  const { base, disc, totalQty, finalValue } = calcSaleValue(q);
+  const discPct = Math.round(disc * 100);
+  pv.textContent = totalQty > 0
+    ? `Menge: ${totalQty} • Basis: ${base.toFixed(2)} • Rabatt: ${discPct}% • ➜ Ertrag: ${finalValue.toFixed(2)} Münzen`
+    : "Bitte Menge eingeben.";
+}
+
+function sellResources() {
+  const { q } = readSellQuantities();
+  for (const r of SELL_FIELDS) {
+    if ((q[r] || 0) > state[r]) {
+      showMessage(`❌ Zu viel ${r} ausgewählt!`, "#b71c1c");
+      return;
+    }
+  }
+  const { finalValue, totalQty } = calcSaleValue(q);
+  if (totalQty <= 0) {
+    showMessage("ℹ️ Keine Menge zum Verkaufen.", "#455a64");
+    return;
+  }
+  for (const r of SELL_FIELDS) {
+    state[r] -= q[r] || 0;
+  }
+  state.coins += finalValue;
   updateDisplay();
-  displayMarketMessage("Spielstand gelöscht.");
+  showMessage(`✅ Verkauf erfolgreich: +${finalValue.toFixed(2)} Münzen`, "#2e7d32");
+  for (const r of SELL_FIELDS) {
+    const el = $(`sell_${r}`);
+    if (el) el.value = "";
+  }
 }
 
-function initOverviewEvents() {
-  const saveBtn = document.getElementById("save_game");
-  const loadBtn = document.getElementById("load_game");
-  const delBtn = document.getElementById("delete_game");
-
-  if (saveBtn) saveBtn.addEventListener("click", saveGame);
-  if (loadBtn) loadBtn.addEventListener("click", loadGame);
-  if (delBtn) delBtn.addEventListener("click", deleteGame);
+// --------------------------- Event-Bindings -----------------------------
+function bindIfExists(id, type, handler) {
+  const el = $(id);
+  if (!el) return false;
+  el.addEventListener(type, handler);
+  return true;
 }
 
-
-function bindOverviewButtons() {
-  const saveBtn = document.getElementById("save_game");
-  const loadBtn = document.getElementById("load_game");
-  const deleteBtn = document.getElementById("delete_game");
-  if (saveBtn) saveBtn.addEventListener("click", saveGame);
-  if (loadBtn) loadBtn.addEventListener("click", loadGame);
-  if (deleteBtn) deleteBtn.addEventListener("click", deleteGame);
+function bindGatherButtons() {
+  bindIfExists("gather_herbs", "click", () => gather("herbs"));
+  bindIfExists("gather_food",  "click", () => gather("food"));
+  bindIfExists("gather_wood",  "click", () => gather("wood"));
+  bindIfExists("gather_stone", "click", () => gather("stone"));
 }
 
-
-
-function showMessage(message, color = "green") {
-  const msg = document.createElement("div");
-  msg.textContent = message;
-  msg.style.position = "fixed";
-  msg.style.bottom = "20px";
-  msg.style.left = "50%";
-  msg.style.transform = "translateX(-50%)";
-  msg.style.backgroundColor = color;
-  msg.style.color = "white";
-  msg.style.padding = "10px 20px";
-  msg.style.borderRadius = "10px";
-  msg.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
-  msg.style.zIndex = 9999;
-  document.body.appendChild(msg);
-  setTimeout(() => msg.remove(), 2500);
+function bindSaveButtons() {
+  bindIfExists("save_game",   "click", saveGame);
+  bindIfExists("load_game",   "click", loadGame);
+  bindIfExists("delete_game", "click", deleteGame);
 }
 
-
-
-function showMessage(message, color = "green") {
-  const msg = document.createElement("div");
-  msg.textContent = message;
-  msg.style.position = "fixed";
-  msg.style.bottom = "20px";
-  msg.style.left = "50%";
-  msg.style.transform = "translateX(-50%)";
-  msg.style.backgroundColor = color;
-  msg.style.color = "white";
-  msg.style.padding = "10px 20px";
-  msg.style.borderRadius = "10px";
-  msg.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
-  msg.style.zIndex = 9999;
-  
-  msg.style.opacity = "0";
-  msg.style.transition = "opacity 0.3s ease, transform 0.3s ease";
-  document.body.appendChild(msg);
-  requestAnimationFrame(() => {
-    msg.style.opacity = "1";
-    msg.style.transform = "translateX(-50%) translateY(-10px)";
+function bindMarket() {
+  SELL_FIELDS.forEach(r => {
+    const el = $(`sell_${r}`);
+    if (el) el.addEventListener("input", updateSalePreview);
   });
-    
-  
-  setTimeout(() => {
-    msg.style.opacity = "0";
-    msg.style.transform = "translateX(-50%) translateY(10px)";
-    setTimeout(() => msg.remove(), 300);
-  }, 2500);
-    
+  bindIfExists("sell_confirm", "click", sellResources);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM fully loaded + init bindings");
+  bindGatherButtons();
+  bindSaveButtons();
+  bindMarket();
+  updateDisplay();
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      setTimeout(() => {
+        bindGatherButtons();
+        bindSaveButtons();
+        bindMarket();
+        updateDisplay();
+      }, 50);
+    });
+  });
+});
